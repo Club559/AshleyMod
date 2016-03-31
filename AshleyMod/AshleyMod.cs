@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AshleyMod.items;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
+using StardewModdingAPI.Inheritance;
 using StardewValley;
 using StardewValley.Characters;
 using StardewValley.Monsters;
@@ -18,6 +20,7 @@ namespace AshleyMod
   public class AshleyMod : Mod
   {
     public static bool enableDebugMode = true;
+    public static Dictionary<string, Texture2D> itemTextures = new Dictionary<string, Texture2D>();
 
     public int modifiedWizardDialogue = 0;
     public bool megaModifiedWizardDialogue = false;
@@ -25,11 +28,12 @@ namespace AshleyMod
     public override void Entry(params object[] objects)
     {
       AshleyEvents.InitializeEvents();
+      GameEvents.LoadContent += GameEvents_LoadContent;
       GameEvents.UpdateTick += GameEvents_UpdateTick;
       LocationEvents.CurrentLocationChanged += LocationEvents_CurrentLocationChanged;
       if(enableDebugMode)
         Program.StardewProgramType.GetField("releaseBuild").SetValue(Program.StardewProgramType, false);
-      SaveGame.serializer = new XmlSerializer(typeof(SaveGame), new Type[28]
+      SaveGame.serializer = new XmlSerializer(typeof(SaveGame), new Type[29]
       {
         typeof (Tool),
         typeof (GameLocation),
@@ -58,9 +62,15 @@ namespace AshleyMod
         typeof (ShadowGirl),
         typeof (Monster),
         typeof (TerrainFeature),
-        typeof (AshleyNPC)
+        typeof (AshleyNPC),
+        typeof (CustomItem)
       });
-      SaveGame.locationSerializer = new XmlSerializer(typeof(GameLocation), new Type[27]
+      SaveGame.farmerSerializer = new XmlSerializer(typeof(Farmer), new Type[2]
+      {
+        typeof (Tool),
+        typeof (CustomItem)
+      });
+      SaveGame.locationSerializer = new XmlSerializer(typeof(GameLocation), new Type[28]
       {
         typeof (Tool),
         typeof (Crow),
@@ -88,8 +98,14 @@ namespace AshleyMod
         typeof (ShadowGirl),
         typeof (Monster),
         typeof (TerrainFeature),
-        typeof (AshleyNPC)
+        typeof (AshleyNPC),
+        typeof (CustomItem)
       });
+    }
+
+    private void GameEvents_LoadContent(object sender, EventArgs e)
+    {
+      itemTextures.Add("wario", Game1.content.Load<Texture2D>("AshleyModItems\\wario"));
     }
 
     private void LocationEvents_CurrentLocationChanged(object sender, EventArgsCurrentLocationChanged e)

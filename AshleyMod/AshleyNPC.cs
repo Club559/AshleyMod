@@ -1,8 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AshleyMod.items;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Characters;
+using StardewValley.Menus;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,6 +66,26 @@ namespace AshleyMod
     public override Rectangle getMugShotSourceRect()
     {
       return new Rectangle(1, 4, 22, 24);
+    }
+
+    //WEIRD SHOP THING
+    public override bool checkAction(Farmer who, GameLocation l)
+    {
+      if (base.checkAction(who, l))
+        return true;
+      if (l.currentEvent != null)
+        return false;
+      if (CurrentDialogue.Count == 0 && who.getFriendshipHeartLevelForNPC(this.name) >= 10)
+      {
+        var ashleyStock = new Dictionary<Item, int[]>();
+        ashleyStock.Add(new ItemWario(), new int[2] { 450, int.MaxValue });
+        var shopMenu = new ShopMenu(ashleyStock, 0, "Ashley");
+        shopMenu.portraitPerson = this;
+        shopMenu.potraitPersonDialogue = Game1.parseText("Have a look at my WarioWares.", Game1.dialogueFont, Game1.tileSize * 5 - Game1.pixelZoom * 4);
+        Game1.activeClickableMenu = shopMenu;
+        return true;
+      }
+      return false;
     }
   }
 }
