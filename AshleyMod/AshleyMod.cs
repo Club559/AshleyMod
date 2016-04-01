@@ -1,5 +1,4 @@
-﻿using AshleyMod.items;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
@@ -20,7 +19,7 @@ namespace AshleyMod
   public class AshleyMod : Mod
   {
     public static bool enableDebugMode = true;
-    public static Dictionary<string, Texture2D> itemTextures = new Dictionary<string, Texture2D>();
+    //public static Dictionary<string, Texture2D> itemTextures = new Dictionary<string, Texture2D>();
 
     public int modifiedWizardDialogue = 0;
     public bool megaModifiedWizardDialogue = false;
@@ -33,7 +32,7 @@ namespace AshleyMod
       LocationEvents.CurrentLocationChanged += LocationEvents_CurrentLocationChanged;
       if(enableDebugMode)
         Program.StardewProgramType.GetField("releaseBuild").SetValue(Program.StardewProgramType, false);
-      SaveGame.serializer = new XmlSerializer(typeof(SaveGame), new Type[29]
+      SaveGame.serializer = new XmlSerializer(typeof(SaveGame), new Type[28]
       {
         typeof (Tool),
         typeof (GameLocation),
@@ -62,15 +61,9 @@ namespace AshleyMod
         typeof (ShadowGirl),
         typeof (Monster),
         typeof (TerrainFeature),
-        typeof (AshleyNPC),
-        typeof (CustomItem)
+        typeof (AshleyNPC)
       });
-      SaveGame.farmerSerializer = new XmlSerializer(typeof(Farmer), new Type[2]
-      {
-        typeof (Tool),
-        typeof (CustomItem)
-      });
-      SaveGame.locationSerializer = new XmlSerializer(typeof(GameLocation), new Type[28]
+      SaveGame.locationSerializer = new XmlSerializer(typeof(GameLocation), new Type[27]
       {
         typeof (Tool),
         typeof (Crow),
@@ -98,14 +91,13 @@ namespace AshleyMod
         typeof (ShadowGirl),
         typeof (Monster),
         typeof (TerrainFeature),
-        typeof (AshleyNPC),
-        typeof (CustomItem)
+        typeof (AshleyNPC)
       });
     }
 
     private void GameEvents_LoadContent(object sender, EventArgs e)
     {
-      itemTextures.Add("wario", Game1.content.Load<Texture2D>("AshleyModItems\\wario"));
+      //itemTextures.Add("wario", Game1.content.Load<Texture2D>("AshleyModItems\\wario"));
     }
 
     private void LocationEvents_CurrentLocationChanged(object sender, EventArgsCurrentLocationChanged e)
@@ -115,15 +107,18 @@ namespace AshleyMod
 
     private void GameEvents_UpdateTick(object sender, EventArgs e)
     {
-      if(Game1.hasLoadedGame)
+      if(Game1.currentLocation != null)
       {
-        if(Game1.getCharacterFromName("Ashley") == null)
-        {
-          foreach(var i in Game1.locations)
-            if(i.name == "WizardHouse")
-              i.addCharacter(new AshleyNPC(new AnimatedSprite(Game1.content.Load<Texture2D>("Characters\\Ashley"), 0, 24, Game1.tileSize * 2 / 4), new Vector2((float)(2 * Game1.tileSize), (float)(6 * Game1.tileSize)), "WizardHouse", 3, "Ashley", false, (Dictionary<int, int[]>)null, Game1.content.Load<Texture2D>("Portraits\\Ashley")));
+        if (Game1.getCharacterFromName("Ashley") == null)
+          foreach (var i in Game1.locations)
+            if (i.name == "WizardHouse")
+            {
+              var ashley = new AshleyNPC(new AnimatedSprite(Game1.content.Load<Texture2D>("Characters\\Ashley"), 0, 24, Game1.tileSize * 2 / 4), new Vector2((float)(2 * Game1.tileSize), (float)(6 * Game1.tileSize)), "WizardHouse", 3, "Ashley", false, (Dictionary<int, int[]>)null, Game1.content.Load<Texture2D>("Portraits\\Ashley"));
+              i.addCharacter(ashley);
+              ashley.reloadSprite();
+            }
+        if (!Game1.NPCGiftTastes.ContainsKey("Ashley"))
           Game1.NPCGiftTastes.Add("Ashley", "Thanks! I needed this!$h/64 336/Thanks. I could use this.$h/-28 420 257 281 107 305 247/What purpose do you expect this to serve for me?$s/80 348 346 303 -74/This is a waste of my time. I'm in the middle of something./390 388 330 571 568 569/Um... thanks?$u// ");
-        }
       }
       if (Game1.CurrentEvent != null)
       {

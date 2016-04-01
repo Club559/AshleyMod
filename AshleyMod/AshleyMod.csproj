@@ -67,8 +67,6 @@
     <Compile Include="AshleyEvents.cs" />
     <Compile Include="CustomEvent.cs" />
     <Compile Include="AshleyMod.cs" />
-    <Compile Include="items\CustomItem.cs" />
-    <Compile Include="items\ItemWario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AshleyNPC.cs" />
   </ItemGroup>

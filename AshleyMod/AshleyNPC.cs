@@ -1,5 +1,4 @@
-﻿using AshleyMod.items;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
@@ -69,6 +68,7 @@ namespace AshleyMod
     }
 
     //WEIRD SHOP THING
+    /*
     public override bool checkAction(Farmer who, GameLocation l)
     {
       if (base.checkAction(who, l))
@@ -87,5 +87,6 @@ namespace AshleyMod
       }
       return false;
     }
+    */
   }
 }
