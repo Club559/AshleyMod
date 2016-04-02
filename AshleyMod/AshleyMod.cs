@@ -18,7 +18,6 @@ namespace AshleyMod
 {
   public class AshleyMod : Mod
   {
-    public static bool enableDebugMode = true;
     //public static Dictionary<string, Texture2D> itemTextures = new Dictionary<string, Texture2D>();
 
     public int modifiedWizardDialogue = 0;
@@ -30,8 +29,6 @@ namespace AshleyMod
       GameEvents.LoadContent += GameEvents_LoadContent;
       GameEvents.UpdateTick += GameEvents_UpdateTick;
       LocationEvents.CurrentLocationChanged += LocationEvents_CurrentLocationChanged;
-      if(enableDebugMode)
-        Program.StardewProgramType.GetField("releaseBuild").SetValue(Program.StardewProgramType, false);
       SaveGame.serializer = new XmlSerializer(typeof(SaveGame), new Type[28]
       {
         typeof (Tool),
